@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>DecisionLens — Dashboard (Phase‑1)</title>
+  <link rel="stylesheet" href="assets/styles.css"/>
+</head>
+<body class="dash">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <div>
+        <div class="brand-name">DecisionLens</div>
+        <div class="brand-sub">Decision Intelligence System — Not Trading Advice</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="tiny muted">Phase‑1 (Silent)</div>
+      <a class="btn ghost small" href="index.html">Home</a>
+    </div>
+  </header>
+
+  <main class="dash-wrap">
+    <section class="center">
+      <div class="row card">
+        <div class="row-head">
+          <div>
+            <div class="h2">Market Sessions</div>
+            <div class="tiny muted">Times shown in PKT (Asia/Karachi). Status updates live.</div>
+          </div>
+          <div class="tiny muted" id="nowPtk"></div>
+        </div>
+        <div class="sessions" id="sessionsGrid"></div>
+      </div>
+
+      <div class="row card">
+        <div class="row-head">
+          <div>
+            <div class="h2">News Intelligence</div>
+            <div class="tiny muted">Headline → meta → summary → key points → why it matters → source.</div>
+          </div>
+          <div class="tiny muted">
+            <span class="badge impact-low">Low impact • blue</span>
+          </div>
+        </div>
+
+        <div class="news-controls">
+          <button class="btn ghost small" id="prevPage">Prev</button>
+          <div class="tiny muted" id="pageInfo"></div>
+          <button class="btn ghost small" id="nextPage">Next</button>
+
+          <div class="spacer"></div>
+
+          <div class="tiny muted">Archive:</div>
+          <input class="input small" type="date" id="archiveDate"/>
+        </div>
+
+        <div id="newsList" class="news"></div>
+      </div>
+    </section>
+
+    <aside class="right">
+      <div class="card">
+        <div class="row-head">
+          <div>
+            <div class="h2">Watchlist</div>
+            <div class="tiny muted">Phase‑1 sample data (refresh hook ready).</div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="btc">BTC Followers</button>
+          <button class="tab" data-tab="eth">ETH Followers</button>
+          <button class="tab" data-tab="ind">Independent</button>
+        </div>
+
+        <div class="watchlist" id="watchlist"></div>
+      </div>
+
+      <div class="card">
+        <div class="row-head">
+          <div>
+            <div class="h2">Premium Panels</div>
+            <div class="tiny muted">Visible but locked in Phase‑1.</div>
+          </div>
+        </div>
+
+        <div class="locked-grid">
+          <button class="locked-card" data-locked="Exchange Listings (Top 3)">
+            <div class="locked-title">Exchange Listings</div>
+            <div class="tiny muted">Top 3 exchanges • countdown • links</div>
+          </button>
+
+          <button class="locked-card" data-locked="Narrative Dynamics">
+            <div class="locked-title">Narrative Dynamics</div>
+            <div class="tiny muted">Funding size • company links • GitHub signals (context)</div>
+          </button>
+
+          <button class="locked-card" data-locked="Institutional Context (Full)">
+            <div class="locked-title">Institutional Context</div>
+            <div class="tiny muted">Liquidity zones • participation • traps • fatigue</div>
+          </button>
+
+          <button class="locked-card" data-locked="Notifications (Paid)">
+            <div class="locked-title">Notifications</div>
+            <div class="tiny muted">Context-only • session shifts • macro reminders</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row-head">
+          <div>
+            <div class="h2">Education</div>
+            <div class="tiny muted">Phase‑3 (placeholder only)</div>
+          </div>
+        </div>
+        <div class="tiny muted">
+          Education content will be added in Phase‑3 in a section‑wise reader (no downloads).
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <div class="modal" id="lockModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card card">
+      <div class="modal-head">
+        <div>
+          <div class="h2">Locked (Phase‑1)</div>
+          <div class="tiny muted" id="lockTitle"></div>
+        </div>
+        <button class="btn ghost small" data-close="1">Close</button>
+      </div>
+      <div class="p">
+        Full context is available with subscription — designed to improve decisions, not to give signals.
+      </div>
+      <div class="p ur">
+        مکمل تناظر سبسکرپشن کے ساتھ دستیاب ہے۔ یہ نظام فیصلے بہتر بنانے کے لیے ہے، سگنلز کے لیے نہیں۔
+      </div>
+      <div class="tiny muted">
+        Phase‑2 enables USDT (TRC20) subscriptions with manual verification.
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

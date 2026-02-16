@@ -1,0 +1,363 @@
+[
+  {
+    "headline": "BTC consolidates near recent range highs as liquidity remains selective",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "London",
+    "timePKT": "Feb 13 • 03:20 PM PKT",
+    "summary": "Price is holding within a tight range while reaction speed suggests selective liquidity. The move looks more like positioning than a fresh trend leg.",
+    "keyPoints": [
+      "Range behavior dominates; follow-through is limited",
+      "Short bursts of volatility fade quickly",
+      "Liquidity looks thin away from the mid-range",
+      "Funding appears neutral; no extreme crowding"
+    ],
+    "whyItMatters": "Selective liquidity increases whipsaw risk; waiting for cleaner confirmation often improves decision quality.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "US data watch: market focus shifts to macro prints and risk repricing",
+    "impact": "Low",
+    "market": "US",
+    "session": "New York",
+    "timePKT": "Feb 13 • 08:10 PM PKT",
+    "summary": "Attention is rotating toward upcoming macro releases, with participants sensitive to surprises. Positioning may become more defensive into the event window.",
+    "keyPoints": [
+      "Volatility can expand around data windows",
+      "Risk assets may reprice quickly on surprises",
+      "Correlation regimes often shift near macro events"
+    ],
+    "whyItMatters": "Macro windows can override local technicals; context-first review reduces impulsive trades.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #3: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 03:09 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #4: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 04:12 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #5: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 05:15 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #6: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 06:18 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #7: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 07:21 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #8: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 08:24 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #9: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 09:27 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #10: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 10:30 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #11: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 11:33 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #12: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 12:36 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #13: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 01:39 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #14: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 02:42 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #15: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 03:45 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #16: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 04:48 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #17: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 05:51 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  },
+  {
+    "headline": "Sample headline #18: Narrative attention builds around sector rotation",
+    "impact": "Low",
+    "market": "Crypto",
+    "session": "—",
+    "timePKT": "Feb 13 • 06:54 PM PKT",
+    "summary": "A short, calm summary that fits in 3–5 lines. This is placeholder content for Phase‑1 wiring and layout verification.",
+    "keyPoints": [
+      "Observation 1 (no advice)",
+      "Observation 2 (no targets)",
+      "Observation 3 (context only)"
+    ],
+    "whyItMatters": "Helps demonstrate the locked card structure with sources and pagination.",
+    "sources": [
+      {
+        "name": "Example Source",
+        "url": "https://example.com"
+      }
+    ]
+  }
+]
