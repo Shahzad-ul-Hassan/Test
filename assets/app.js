@@ -148,12 +148,17 @@ function sessionState(now, s){
   }else if(now >= preOpenStart && now < openDate){
     state="pre"; label="Pre‑Open"; dot="pre";
     countdown = `Opens in ${humanDur(minutesUntil(now, openDate))}`;
-  }else{
-    // Next open is tomorrow
-    const nextDay = new Date(openDate.getTime() + 24*60*60000);
-    const nextOpen = nextDay;
-    countdown = `Opens in ${humanDur(minutesUntil(now, nextOpen))}`;
+    } else {
+    // If we're before today's open (but not in the pre-open window), show time until today's open
+    if (now < openDate) {
+      countdown = `Opens in ${humanDur(minutesUntil(now, openDate))}`;
+    } else {
+      // Otherwise, we're after close → next open is tomorrow
+      const nextOpen = new Date(openDate.getTime() + 24*60*60000);
+      countdown = `Opens in ${humanDur(minutesUntil(now, nextOpen))}`;
+    }
   }
+
 
   return {
     state, label, dot, countdown,
