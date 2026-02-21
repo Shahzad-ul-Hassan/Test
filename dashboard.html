@@ -3,10 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>DecisionLens — Dashboard (Phase‑1)</title>
+  <title>DecisionLens — Dashboard (Phase-2)</title>
   <link rel="stylesheet" href="assets/styles.css"/>
+
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 </head>
+
 <body class="dash">
+
   <header class="topbar">
     <div class="brand">
       <div class="logo-dot"></div>
@@ -16,7 +22,7 @@
       </div>
     </div>
     <div class="topbar-right">
-      <div class="tiny muted">Phase‑1 (Silent)</div>
+      <div class="tiny muted">Phase-2</div>
       <a class="btn ghost small" href="index.html">Home</a>
     </div>
   </header>
@@ -27,7 +33,7 @@
         <div class="row-head">
           <div>
             <div class="h2">Market Sessions</div>
-            <div class="tiny muted">Times shown in PKT (Asia/Karachi). Status updates live.</div>
+            <div class="tiny muted">Times auto-adjust to your local timezone.</div>
           </div>
           <div class="tiny muted" id="nowPtk"></div>
         </div>
@@ -65,7 +71,7 @@
         <div class="row-head">
           <div>
             <div class="h2">Watchlist</div>
-            <div class="tiny muted">Phase‑1 sample data (refresh hook ready).</div>
+            <div class="tiny muted">Live context view.</div>
           </div>
         </div>
 
@@ -82,29 +88,29 @@
         <div class="row-head">
           <div>
             <div class="h2">Premium Panels</div>
-            <div class="tiny muted">Visible but locked in Phase‑1.</div>
+            <div class="tiny muted">Locked until subscription approval.</div>
           </div>
         </div>
 
         <div class="locked-grid">
-          <button class="locked-card" data-locked="Exchange Listings (Top 3)">
+          <button class="locked-card">
             <div class="locked-title">Exchange Listings</div>
             <div class="tiny muted">Top 3 exchanges • countdown • links</div>
           </button>
 
-          <button class="locked-card" data-locked="Narrative Dynamics">
+          <button class="locked-card">
             <div class="locked-title">Narrative Dynamics</div>
-            <div class="tiny muted">Funding size • company links • GitHub signals (context)</div>
+            <div class="tiny muted">Funding • GitHub signals • context</div>
           </button>
 
-          <button class="locked-card" data-locked="Institutional Context (Full)">
+          <button class="locked-card">
             <div class="locked-title">Institutional Context</div>
-            <div class="tiny muted">Liquidity zones • participation • traps • fatigue</div>
+            <div class="tiny muted">Liquidity • participation • fatigue</div>
           </button>
 
-          <button class="locked-card" data-locked="Notifications (Paid)">
+          <button class="locked-card">
             <div class="locked-title">Notifications</div>
-            <div class="tiny muted">Context-only • session shifts • macro reminders</div>
+            <div class="tiny muted">Session & macro context alerts</div>
           </button>
         </div>
       </div>
@@ -113,46 +119,42 @@
         <div class="row-head">
           <div>
             <div class="h2">Education</div>
-            <div class="tiny muted">Phase‑3 (placeholder only)</div>
+            <div class="tiny muted">Phase-3</div>
           </div>
         </div>
         <div class="tiny muted">
-          Education content will be added in Phase‑3 in a section‑wise reader (no downloads).
+          Education module activates in Phase-3.
         </div>
       </div>
     </aside>
   </main>
 
-  <div class="modal" id="lockModal" aria-hidden="true">
-    <div class="modal-backdrop" data-close="1"></div>
-    <div class="modal-card card">
-      <div class="modal-head">
-        <div>
-          <div class="h2">Locked (Phase‑1)</div>
-          <div class="tiny muted" id="lockTitle"></div>
-        </div>
-        <button class="btn ghost small" data-close="1">Close</button>
-      </div>
-      <div class="p">
-        Full context is available with subscription — designed to improve decisions, not to give signals.
-      </div>
-      <div class="p ur">
-        مکمل تناظر سبسکرپشن کے ساتھ دستیاب ہے۔ یہ نظام فیصلے بہتر بنانے کے لیے ہے، سگنلز کے لیے نہیں۔
-      </div>
-      <div class="tiny muted">
-        Phase‑2 enables USDT (TRC20) subscriptions with manual verification.
-      </div>
-    </div>
-  </div>
-
+  <!-- Existing App Logic -->
   <script src="assets/app.js"></script>
+
+  <!-- Firebase Init + Auth Guard -->
   <script>
-  auth.onAuthStateChanged((user) => {
-    if (!user) {
-      // Not logged in → redirect
-      window.location.href = "login.html";
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT1FM9W9YcbCmVteamLaZ5N_0d82b_MKk",
+      authDomain: "decisionlens-85f62.firebaseapp.com",
+      projectId: "decisionlens-85f62",
+      storageBucket: "decisionlens-85f62.firebasestorage.app",
+      messagingSenderId: "63642468078",
+      appId: "1:63642468078:web:d680fb671b9dff53e97dff"
+    };
+
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
-  });
-</script>
+
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
 </body>
 </html>
