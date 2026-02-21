@@ -146,5 +146,13 @@
   </div>
 
   <script src="assets/app.js"></script>
+  <script>
+  auth.onAuthStateChanged((user) => {
+    if (!user) {
+      // Not logged in → redirect
+      window.location.href = "login.html";
+    }
+  });
+</script>
 </body>
 </html>
