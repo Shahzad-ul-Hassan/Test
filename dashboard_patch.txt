@@ -1,0 +1,24 @@
+Add this code before </body> in dashboard.html:
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCT1FM9W9YcbCmVteamLaZ5N_0d82b_MKk",
+  authDomain: "decisionlens-85f62.firebaseapp.com",
+  projectId: "decisionlens-85f62",
+  storageBucket: "decisionlens-85f62.firebasestorage.app",
+  messagingSenderId: "63642468078",
+  appId: "1:63642468078:web:d680fb671b9dff53e97dff"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+auth.onAuthStateChanged((user) => {
+  if (!user) {
+    window.location.href = "login.html";
+  }
+});
+</script>

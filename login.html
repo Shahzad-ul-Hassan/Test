@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DecisionLens — Login</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    body { background:#0e1117; color:#fff; font-family:Arial; display:flex; align-items:center; justify-content:center; height:100vh; margin:0; }
+    .card { background:#161b22; padding:30px; border-radius:12px; width:320px; }
+    input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:none; }
+    button { width:100%; padding:10px; margin-top:10px; border:none; border-radius:6px; cursor:pointer; }
+    .primary { background:#238636; color:white; }
+    .secondary { background:#30363d; color:white; }
+    .msg { margin-top:10px; font-size:14px; }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>DecisionLens</h2>
+
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+
+    <button id="btnLogin" class="primary">Login</button>
+    <button id="btnSignup" class="secondary">Create Account</button>
+
+    <div id="msg" class="msg"></div>
+  </div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCT1FM9W9YcbCmVteamLaZ5N_0d82b_MKk",
+  authDomain: "decisionlens-85f62.firebaseapp.com",
+  projectId: "decisionlens-85f62",
+  storageBucket: "decisionlens-85f62.firebasestorage.app",
+  messagingSenderId: "63642468078",
+  appId: "1:63642468078:web:d680fb671b9dff53e97dff"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const msg = document.getElementById("msg");
+
+document.getElementById("btnLogin").onclick = async () => {
+  try {
+    await auth.signInWithEmailAndPassword(email.value, password.value);
+    window.location.href = "dashboard.html";
+  } catch(e) {
+    msg.innerText = e.message;
+  }
+};
+
+document.getElementById("btnSignup").onclick = async () => {
+  try {
+    const userCred = await auth.createUserWithEmailAndPassword(email.value, password.value);
+    await db.collection("users").doc(userCred.user.uid).set({
+      email: email.value,
+      active: false,
+      plan: null,
+      expiry: null,
+      createdAt: new Date().toISOString()
+    });
+    msg.innerText = "Account created. You can login now.";
+  } catch(e) {
+    msg.innerText = e.message;
+  }
+};
+</script>
+</body>
+</html>
