@@ -3,33 +3,74 @@ const $ = (id) => document.getElementById(id);
 
 function setMsg(text, ok=false){
   const el = $("msg");
+  if(!el) return;
   el.textContent = text;
   el.style.color = ok ? "#7ee787" : "#ff6b6b";
 }
 
+function setCopyMsg(text, ok=false){
+  const el = $("copyMsg");
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = ok ? "#7ee787" : "#ff6b6b";
+}
+
+function bindUI(){
+  const btnLogout = $("btnLogout");
+  if(btnLogout){
+    btnLogout.addEventListener("click", async () => {
+      try{ await auth.signOut(); }catch(e){}
+      window.location.href = "login.html";
+    });
+  }
+
+  const btnCopy = $("btnCopyAddr");
+  if(btnCopy){
+    btnCopy.addEventListener("click", async () => {
+      const addr = ($("walletBox")?.textContent || "").trim();
+      try{
+        await navigator.clipboard.writeText(addr);
+        setCopyMsg("Copied.", true);
+        setTimeout(()=>setCopyMsg(""), 1500);
+      }catch(e){
+        setCopyMsg("Copy failed. Select and copy manually.", false);
+      }
+    });
+  }
+
+  const btnSubmit = $("btnSubmit");
+  if(btnSubmit){
+    btnSubmit.addEventListener("click", submitPayment);
+  }
+}
+
 function requireAuth(){
   auth.onAuthStateChanged((user) => {
+    const who = $("who");
+    const btnLogin = $("btnLogin");
+    const btnLogout = $("btnLogout");
+
     if(!user){
-      window.location.href = "login.html";
+      if(who) who.textContent = "Not logged in";
+      if(btnLogin) btnLogin.style.display = "inline-flex";
+      if(btnLogout) btnLogout.style.display = "none";
       return;
     }
-    $("who").textContent = user.email;
+
+    if(who) who.textContent = user.email;
+    if(btnLogin) btnLogin.style.display = "none";
+    if(btnLogout) btnLogout.style.display = "inline-flex";
   });
 }
 
-$("btnLogout").addEventListener("click", async () => {
-  await auth.signOut();
-  window.location.href = "index.html";
-});
-
-$("btnSubmit").addEventListener("click", async () => {
+async function submitPayment(){
   const user = auth.currentUser;
-  if(!user) return setMsg("Please login first.");
+  if(!user) return setMsg("Please login first.", false);
 
-  const plan = $("plan").value;
-  const txHash = $("tx").value.trim();
+  const plan = ($("plan")?.value || "monthly");
+  const txHash = ($("tx")?.value || "").trim();
 
-  if(txHash.length < 12) return setMsg("Please paste a valid transaction hash (TxID).");
+  if(txHash.length < 12) return setMsg("Please paste a valid transaction hash (TxID).", false);
 
   const payload = {
     uid: user.uid,
@@ -44,10 +85,13 @@ $("btnSubmit").addEventListener("click", async () => {
   try{
     await db.collection("payments").add(payload);
     setMsg("Submitted. Verification pending. You will be activated after approval.", true);
-    $("tx").value = "";
+    if($("tx")) $("tx").value = "";
   }catch(e){
-    setMsg(e.message || "Submission failed.");
+    setMsg(e?.message || "Submission failed.", false);
   }
-});
+}
 
-requireAuth();
+document.addEventListener("DOMContentLoaded", ()=>{
+  bindUI();
+  requireAuth();
+});
