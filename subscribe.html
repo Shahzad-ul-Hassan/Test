@@ -24,7 +24,8 @@
     <div class="topbar-right">
       <a class="btn ghost small" href="dashboard.html">Dashboard</a>
       <a class="btn ghost small" href="index.html">Home</a>
-      <button class="btn ghost small" id="btnLogout">Logout</button>
+      <a class="btn ghost small" href="login.html" id="btnLogin" style="display:none">Login</a>
+      <button class="btn ghost small" id="btnLogout" type="button">Logout</button>
     </div>
   </header>
 
@@ -41,6 +42,7 @@
       <div class="grid2">
         <div class="card inner">
           <div class="h3">Choose a plan</div>
+
           <label class="tiny muted">Plan</label>
           <select id="plan" class="input">
             <option value="monthly">$8 / month</option>
@@ -59,22 +61,29 @@
 
           <div style="height:10px"></div>
 
-          <button class="btn btn-primary" id="btnSubmit">Submit for verification</button>
+          <button class="btn btn-primary" id="btnSubmit" type="button">Submit for verification</button>
           <div class="tiny muted" id="msg" style="margin-top:10px"></div>
         </div>
 
         <div class="card inner">
           <div class="h3">Pay with USDT (TRC20)</div>
-
           <div class="tiny muted">Send USDT on <b>TRC20</b> only.</div>
+
           <div style="height:10px"></div>
 
           <div class="tiny muted">Wallet address</div>
-          <div class="mono box" id="walletBox" data-wallet="PASTE_YOUR_USDT_TRC20_ADDRESS">
-            PASTE_YOUR_USDT_TRC20_ADDRESS
+          <div class="mono box" id="walletBox">TNoLjm88FHpCMFgze8uBWrNZad7tMf52Hb</div>
+          <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap">
+            <button class="btn ghost small" id="btnCopyAddr" type="button">Copy address</button>
+            <span class="tiny muted" id="copyMsg"></span>
           </div>
 
-          <div class="tiny muted" style="margin-top:10px">
+          <div class="tiny muted" style="margin-top:14px">
+            Optional QR (upload image as <span class="mono">assets/usdt-trc20-qr.png</span>):
+          </div>
+          <img src="assets/usdt-trc20-qr.png" alt="USDT TRC20 QR" style="max-width:260px; border-radius:14px; margin-top:10px" onerror="this.style.display='none'"/>
+
+          <div class="tiny muted" style="margin-top:14px">
             After payment:
             <ul>
               <li>Copy the transaction hash (TxID)</li>
