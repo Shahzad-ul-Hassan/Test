@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DecisionLens — Subscribe</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+</head>
+<body class="page">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <div>
+        <div class="brand-name">DecisionLens</div>
+        <div class="brand-sub">Decision Intelligence System — Not Trading Advice</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <a class="btn ghost small" href="dashboard.html">Dashboard</a>
+      <a class="btn ghost small" href="index.html">Home</a>
+      <button class="btn ghost small" id="btnLogout">Logout</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="card wide">
+      <div class="row-head">
+        <div>
+          <div class="h2">Subscription</div>
+          <div class="tiny muted">Unlock premium panels after manual verification.</div>
+        </div>
+        <div class="tiny muted" id="who"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card inner">
+          <div class="h3">Choose a plan</div>
+          <label class="tiny muted">Plan</label>
+          <select id="plan" class="input">
+            <option value="monthly">$8 / month</option>
+            <option value="yearly">$80 / year</option>
+          </select>
+
+          <div style="height:10px"></div>
+
+          <label class="tiny muted">Network</label>
+          <div class="pill">USDT (TRC20)</div>
+
+          <div style="height:10px"></div>
+
+          <label class="tiny muted">Transaction Hash (TxID)</label>
+          <input id="tx" class="input" placeholder="Paste your Tx hash here" />
+
+          <div style="height:10px"></div>
+
+          <button class="btn btn-primary" id="btnSubmit">Submit for verification</button>
+          <div class="tiny muted" id="msg" style="margin-top:10px"></div>
+        </div>
+
+        <div class="card inner">
+          <div class="h3">Pay with USDT (TRC20)</div>
+
+          <div class="tiny muted">Send USDT on <b>TRC20</b> only.</div>
+          <div style="height:10px"></div>
+
+          <div class="tiny muted">Wallet address</div>
+          <div class="mono box" id="walletBox" data-wallet="PASTE_YOUR_USDT_TRC20_ADDRESS">
+            PASTE_YOUR_USDT_TRC20_ADDRESS
+          </div>
+
+          <div class="tiny muted" style="margin-top:10px">
+            After payment:
+            <ul>
+              <li>Copy the transaction hash (TxID)</li>
+              <li>Paste it here and submit</li>
+              <li>We verify manually and activate your access</li>
+            </ul>
+          </div>
+
+          <div class="tiny muted">
+            Note: DecisionLens never provides buy/sell signals, entries/exits, targets, SL/TP, or predictions.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCT1FM9W9YcbCmVteamLaZ5N_0d82b_MKk",
+      authDomain: "decisionlens-85f62.firebaseapp.com",
+      projectId: "decisionlens-85f62",
+      storageBucket: "decisionlens-85f62.firebasestorage.app",
+      messagingSenderId: "63642468078",
+      appId: "1:63642468078:web:d680fb671b9dff53e97dff"
+    };
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    window.auth = firebase.auth();
+    window.db = firebase.firestore();
+  </script>
+
+  <script src="assets/subscription.js"></script>
+</body>
+</html>
