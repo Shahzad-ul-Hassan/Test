@@ -128,14 +128,25 @@ function attachPremiumHandlers(){
 }
 
 function requireAuth(){
+
   auth.onAuthStateChanged(async (user)=>{
     bindModal();
     attachPremiumHandlers();
     bindLogout();
 
     if(!user){
-      // Require login for dashboard
-      window.location.href = "login.html";
+      // Guest access: keep Phase‑1 free panels active
+      window.DL_ACCESS = { paid:false, plan:null, expiry:null, email:null };
+      setStatus("Free view • Not logged in", false);
+
+      const u = $("dlUser"); if(u) u.textContent = "";
+      const lo = $("dlLogoutBtn"); if(lo) lo.style.display = "none";
+      const sb = $("dlSubscribeBtn"); if(sb) sb.style.display = "inline-flex";
+
+      // Update premium header text
+      const premMuted = document.querySelector(".locked-grid")?.closest(".card")?.querySelector(".tiny.muted");
+      if(premMuted) premMuted.textContent = "Visible but locked until subscription approval.";
+
       return;
     }
 
