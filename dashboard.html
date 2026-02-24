@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>DecisionLens — Dashboard (Phase-2)</title>
+  <title>DecisionLens — Dashboard (Phase‑1)</title>
   <link rel="stylesheet" href="assets/styles.css"/>
 
   <!-- Firebase (compat) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 </head>
-
 <body class="dash">
-
   <header class="topbar">
     <div class="brand">
       <div class="logo-dot"></div>
@@ -21,10 +21,15 @@
         <div class="brand-sub">Decision Intelligence System — Not Trading Advice</div>
       </div>
     </div>
+    
     <div class="topbar-right">
-      <div class="tiny muted">Phase-2</div>
+      <div class="tiny muted" id="dlStatus">Checking access…</div>
+      <div class="tiny muted" id="dlUser" style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></div>
+      <a class="btn ghost small" href="subscribe.html" id="dlSubscribeBtn" style="display:none">Subscribe</a>
+      <button class="btn ghost small" id="dlLogoutBtn" type="button" style="display:none">Logout</button>
       <a class="btn ghost small" href="index.html">Home</a>
     </div>
+
   </header>
 
   <main class="dash-wrap">
@@ -33,7 +38,7 @@
         <div class="row-head">
           <div>
             <div class="h2">Market Sessions</div>
-            <div class="tiny muted">Times auto-adjust to your local timezone.</div>
+            <div class="tiny muted">Times shown in PKT (Asia/Karachi). Status updates live.</div>
           </div>
           <div class="tiny muted" id="nowPtk"></div>
         </div>
@@ -71,7 +76,7 @@
         <div class="row-head">
           <div>
             <div class="h2">Watchlist</div>
-            <div class="tiny muted">Live context view.</div>
+            <div class="tiny muted">Phase‑1 sample data (refresh hook ready).</div>
           </div>
         </div>
 
@@ -88,29 +93,29 @@
         <div class="row-head">
           <div>
             <div class="h2">Premium Panels</div>
-            <div class="tiny muted">Locked until subscription approval.</div>
+            <div class="tiny muted">Visible but locked in Phase‑1.</div>
           </div>
         </div>
 
         <div class="locked-grid">
-          <button class="locked-card">
+          <button class="locked-card" data-locked="Exchange Listings (Top 3)">
             <div class="locked-title">Exchange Listings</div>
             <div class="tiny muted">Top 3 exchanges • countdown • links</div>
           </button>
 
-          <button class="locked-card">
+          <button class="locked-card" data-locked="Narrative Dynamics">
             <div class="locked-title">Narrative Dynamics</div>
-            <div class="tiny muted">Funding • GitHub signals • context</div>
+            <div class="tiny muted">Funding size • company links • GitHub signals (context)</div>
           </button>
 
-          <button class="locked-card">
+          <button class="locked-card" data-locked="Institutional Context (Full)">
             <div class="locked-title">Institutional Context</div>
-            <div class="tiny muted">Liquidity • participation • fatigue</div>
+            <div class="tiny muted">Liquidity zones • participation • traps • fatigue</div>
           </button>
 
-          <button class="locked-card">
+          <button class="locked-card" data-locked="Notifications (Paid)">
             <div class="locked-title">Notifications</div>
-            <div class="tiny muted">Session & macro context alerts</div>
+            <div class="tiny muted">Context-only • session shifts • macro reminders</div>
           </button>
         </div>
       </div>
@@ -119,20 +124,54 @@
         <div class="row-head">
           <div>
             <div class="h2">Education</div>
-            <div class="tiny muted">Phase-3</div>
+            <div class="tiny muted">Phase‑3 (placeholder only)</div>
           </div>
         </div>
         <div class="tiny muted">
-          Education module activates in Phase-3.
+          Education content will be added in Phase‑3 in a section‑wise reader (no downloads).
         </div>
       </div>
     </aside>
   </main>
 
-  <!-- Existing App Logic -->
+  <div class="modal" id="lockModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="1"></div>
+    <div class="modal-card card">
+      <div class="modal-head">
+        <div>
+          <div class="h2">Locked (Phase‑1)</div>
+          <div class="tiny muted" id="lockTitle"></div>
+        </div>
+        <button class="btn ghost small" data-close="1">Close</button>
+      </div>
+      <div class="p">
+        Full context is available with subscription — designed to improve decisions, not to give signals.
+      </div>
+      <div class="p ur">
+        مکمل تناظر سبسکرپشن کے ساتھ دستیاب ہے۔ یہ نظام فیصلے بہتر بنانے کے لیے ہے، سگنلز کے لیے نہیں۔
+      </div>
+      <div class="tiny muted">
+        Phase‑2 enables USDT (TRC20) subscriptions with manual verification.
+      </div>
+    </div>
+  </div>
+
   <script src="assets/app.js"></script>
 
-  <!-- Firebase Init + Auth Guard -->
+  <!-- Premium Modal -->
+  <div id="premiumModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-card">
+      <div class="h3" id="pmTitle">Premium</div>
+      <div class="tiny muted" id="pmBody" style="margin-top:10px"></div>
+      <div style="display:flex; gap:10px; margin-top:14px; flex-wrap:wrap">
+        <a class="btn btn-primary small" href="subscribe.html" id="pmSubscribeLink">Go to Subscribe</a>
+        <button class="btn ghost small" data-close type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase init (Dashboard) -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCT1FM9W9YcbCmVteamLaZ5N_0d82b_MKk",
@@ -142,19 +181,11 @@
       messagingSenderId: "63642468078",
       appId: "1:63642468078:web:d680fb671b9dff53e97dff"
     };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    const auth = firebase.auth();
-
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      }
-    });
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    window.auth = firebase.auth();
+    window.db = firebase.firestore();
   </script>
+  <script src="assets/access.js"></script>
 
 </body>
 </html>
