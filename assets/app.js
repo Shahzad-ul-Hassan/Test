@@ -1,7 +1,6 @@
-/* DecisionLens Phase-2 Updated JS
-   - Weekend close rule for Forex/Stock sessions
-   - Crypto remains 24/7
-   - Paid locks modal active
+/* DecisionLens Dashboard JS (Phase-2)
+   - Renders Market Sessions with weekend rules (forex/stocks closed Sat/Sun)
+   - Premium clicks handled by assets/access.js (DL_handlePremiumClick)
 */
 
 const TZ_USER = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -9,15 +8,12 @@ const TZ_USER = Intl.DateTimeFormat().resolvedOptions().timeZone;
 function fmtInTZ(date, timeZone, opts){
   return new Intl.DateTimeFormat("en-US", { timeZone, ...opts }).format(date);
 }
-
 function fmtTime12(date, timeZone){
   return fmtInTZ(date, timeZone, { hour:"numeric", minute:"2-digit", hour12:true });
 }
-
 function minutesUntil(a, b){
   return Math.floor((b.getTime() - a.getTime()) / 60000);
 }
-
 function humanDur(mins){
   const m = Math.max(0, mins);
   const h = Math.floor(m/60);
@@ -43,22 +39,11 @@ function sessionState(now, s){
   if(s.key === "crypto"){
     return { label:"Open", dot:"open", countdown:"24/7", openUser:"—", closeUser:"—" };
   }
-
   if(isWeekend(now, s.tz)){
-    return {
-      label:"Closed (Weekend)",
-      dot:"closed",
-      countdown:"Opens Monday",
-      openUser:"—",
-      closeUser:"—"
-    };
+    return { label:"Closed (Weekend)", dot:"closed", countdown:"Opens Monday", openUser:"—", closeUser:"—" };
   }
-
-  const openDate = new Date(now);
-  openDate.setHours(s.open.h, s.open.m, 0, 0);
-
-  const closeDate = new Date(now);
-  closeDate.setHours(s.close.h, s.close.m, 0, 0);
+  const openDate = new Date(now); openDate.setHours(s.open.h, s.open.m, 0, 0);
+  const closeDate = new Date(now); closeDate.setHours(s.close.h, s.close.m, 0, 0);
 
   if(now >= openDate && now < closeDate){
     return {
@@ -68,15 +53,14 @@ function sessionState(now, s){
       openUser: fmtTime12(openDate, TZ_USER),
       closeUser: fmtTime12(closeDate, TZ_USER)
     };
-  } else {
-    return {
-      label:"Closed",
-      dot:"closed",
-      countdown:"Opens in " + humanDur(minutesUntil(now, openDate)),
-      openUser: fmtTime12(openDate, TZ_USER),
-      closeUser: fmtTime12(closeDate, TZ_USER)
-    };
   }
+  return {
+    label:"Closed",
+    dot:"closed",
+    countdown:"Opens in " + humanDur(minutesUntil(now, openDate)),
+    openUser: fmtTime12(openDate, TZ_USER),
+    closeUser: fmtTime12(closeDate, TZ_USER)
+  };
 }
 
 function renderSessions(){
@@ -100,25 +84,7 @@ function renderSessions(){
   });
 }
 
-function initLocks(){
-  const modal = document.getElementById("lockModal");
-  if(!modal) return;
-
-  document.querySelectorAll(".locked-card").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      modal.setAttribute("aria-hidden","false");
-    });
-  });
-
-  modal.querySelectorAll("[data-close]").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      modal.setAttribute("aria-hidden","true");
-    });
-  });
-}
-
 document.addEventListener("DOMContentLoaded", ()=>{
   renderSessions();
-  initLocks();
   setInterval(renderSessions, 15000);
 });
