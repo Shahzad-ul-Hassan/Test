@@ -128,25 +128,35 @@ function attachPremiumHandlers(){
 }
 
 function requireAuth(){
-
   auth.onAuthStateChanged(async (user)=>{
     bindModal();
     attachPremiumHandlers();
     bindLogout();
 
     if(!user){
-      // Guest access: keep Phase‑1 free panels active
-      window.DL_ACCESS = { paid:false, plan:null, expiry:null, email:null };
-      setStatus("Free view • Not logged in", false);
+      // Free (guest) access: allow Phase-1 panels.
+      window.DL_ACCESS.paid = false;
+      window.DL_ACCESS.plan = null;
+      window.DL_ACCESS.expiry = null;
+      window.DL_ACCESS.email = null;
 
-      const u = $("dlUser"); if(u) u.textContent = "";
-      const lo = $("dlLogoutBtn"); if(lo) lo.style.display = "none";
-      const sb = $("dlSubscribeBtn"); if(sb) sb.style.display = "inline-flex";
+      const s = $("dlStatus");
+      if(s) s.textContent = "Free";
+      const u = $("dlUser");
+      if(u) u.textContent = "";
 
-      // Update premium header text
-      const premMuted = document.querySelector(".locked-grid")?.closest(".card")?.querySelector(".tiny.muted");
-      if(premMuted) premMuted.textContent = "Visible but locked until subscription approval.";
+      // Show subscribe/login entry point (optional)
+      const sub = $("dlSubscribeBtn");
+      if(sub){
+        sub.style.display = "";
+        sub.textContent = "Login";
+        sub.onclick = ()=> window.location.href = "login.html";
+      }
+      const lo = $("dlLogoutBtn");
+      if(lo) lo.style.display = "none";
 
+      // Keep premium panels locked for guests
+      setPaidUI(false);
       return;
     }
 
