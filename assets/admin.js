@@ -2,7 +2,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-const app = getApp(); // existing app reuse
+const app = getApp(); // reuse existing initialized app
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -26,10 +26,13 @@ onAuthStateChanged(auth, async (user) => {
     let tableRows = "";
 
     usersSnapshot.forEach(docSnap => {
+
       const data = docSnap.data();
       total++;
 
-      if (data.role === "admin") admins++;
+      if (data.role === "admin") {
+        admins++;
+      }
 
       if (data.active === true) {
         if (data.expiry && data.expiry.toMillis && data.expiry.toMillis() < now) {
@@ -78,9 +81,8 @@ onAuthStateChanged(auth, async (user) => {
 
   } catch (error) {
     console.error("Admin load error:", error);
-    document.getElementById("admin-content").innerHTML = `
-      <p style="color:red;">Error loading users. Check console.</p>
-    `;
+    document.getElementById("admin-content").innerHTML =
+      `<p style="color:red;">Error loading users. Check console.</p>`;
   }
 
 });
