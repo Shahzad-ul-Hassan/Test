@@ -8,30 +8,6 @@ function setMsg(text, ok=false){
 }
 
 
-function bindPreviewButtons(){
-  const setMode = (mode) => {
-    try{
-      if(!mode) localStorage.removeItem("DL_PREVIEW_MODE");
-      else localStorage.setItem("DL_PREVIEW_MODE", mode);
-    }catch(e){}
-  };
-
-  const goDash = () => window.open("dashboard.html", "_blank");
-
-  const n = $("pvNormal");
-  if(n) n.addEventListener("click", ()=>{ setMode(""); setMsg("Preview cleared. Open dashboard.", true); goDash(); });
-
-  const g = $("pvGuest");
-  if(g) g.addEventListener("click", ()=>{ setMode("guest"); setMsg("Preview: Guest (Free). Open dashboard.", true); goDash(); });
-
-  const p = $("pvPaid");
-  if(p) p.addEventListener("click", ()=>{ setMode("paid"); setMsg("Preview: Paid. Open dashboard.", true); goDash(); });
-
-  const x = $("pvExpired");
-  if(x) x.addEventListener("click", ()=>{ setMode("expired"); setMsg("Preview: Expired. Open dashboard.", true); goDash(); });
-}
-
-
 function requireAdmin(){
   auth.onAuthStateChanged(async (user) => {
     if(!user){
@@ -40,33 +16,30 @@ function requireAdmin(){
     }
     $("who").textContent = user.email;
 
-    let isAdmin = false;
+    // Admin detection:
+    // 1) Hard-locked admin email (safe for Phase-1)
+    // 2) role: "admin" in /users/{uid} (future-proof)
+    let isAdmin = (user.email === ADMIN_EMAIL);
 
     try{
       const uref = db.collection("users").doc(user.uid);
       const usnap = await uref.get();
-      const udata = usnap.exists ? (usnap.data() || {}) : {};
-      // Allow admin if role is admin OR fallback to ADMIN_EMAIL
-      isAdmin = (udata.role === "admin") || (user.email === ADMIN_EMAIL);
+      if(usnap.exists){
+        const ud = usnap.data() || {};
+        if(ud.role === "admin") isAdmin = true;
+      }else{
+        // Create a minimal user doc (best-effort) so that role can be stored.
+        await uref.set({ email: user.email || "" }, { merge:true });
+      }
 
-      // If this is the ADMIN_EMAIL but role is missing, self-heal (best-effort)
-      if(!usnap.exists && user.email === ADMIN_EMAIL){
-        await uref.set({
-          email: user.email,
-          role: "admin",
-          active: true,
-          plan: "yearly",
-          expiry: null,
-          createdAt: new Date().toISOString()
-        }, { merge:true });
-        isAdmin = true;
-      }else if(usnap.exists && user.email === ADMIN_EMAIL && udata.role !== "admin"){
-        await uref.set({ role:"admin" }, { merge:true });
+      // Self-heal: ensure admin role is recorded for the locked admin email
+      if(user.email === ADMIN_EMAIL){
+        await uref.set({ role:"admin", active:true }, { merge:true });
         isAdmin = true;
       }
     }catch(e){
-      // Fallback to email-only if rules block read
-      isAdmin = (user.email === ADMIN_EMAIL);
+      // If rules block writes/reads, we still allow the locked admin email.
+      // No console spam for users.
     }
 
     if(!isAdmin){
@@ -75,7 +48,8 @@ function requireAdmin(){
       return;
     }
 
-    bindPreviewButtons();
+    bindPreviewMode();
+    renderFeatureBoard();
     loadPending();
   });
 }
@@ -107,7 +81,7 @@ function card(payId, p){
 }
 
 async function loadPending(){
-  $("list").innerHTML = "";
+  $("paymentsList").innerHTML = "";
   setMsg("Loading pending submissions…", true);
 
   try{
@@ -120,7 +94,7 @@ async function loadPending(){
     setMsg("Pending payments loaded.", true);
     snap.forEach(doc => {
       const p = doc.data();
-      $("list").appendChild(card(doc.id, p));
+      $("paymentsList").appendChild(card(doc.id, p));
     });
 
     document.querySelectorAll("[data-approve]").forEach(btn=>{

@@ -38,26 +38,36 @@
       </div>
 
       <div class="tiny muted" id="msg" style="margin:10px 0"></div>
-      <div id="list" class="admin-list"></div>
+      <div id="paymentsList" class="admin-list"></div>
     </section>
-  
-    <section class="card wide" style="margin-top:16px;">
+
+    <section class="card wide" style="margin-top:16px">
       <div class="row-head">
         <div>
-          <div class="h2">Preview modes</div>
-          <div class="tiny muted">Admin-only. Use these to inspect the dashboard as Guest / Paid / Expired without changing real user records.</div>
+          <div class="h2">Governance & Testing</div>
+          <div class="tiny muted">Preview modes help you verify Free vs Paid behavior without changing user records.</div>
         </div>
       </div>
 
-      <div class="grid" style="margin-top:12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
-        <button class="btn" id="pvNormal">Normal view</button>
-        <button class="btn ghost" id="pvGuest">Preview as Guest (Free)</button>
-        <button class="btn ghost" id="pvPaid">Preview as Paid</button>
-        <button class="btn ghost" id="pvExpired">Preview as Expired</button>
-      </div>
+      <div class="admin-grid">
+        <div class="admin-card">
+          <div class="h3" style="margin:0 0 8px 0">Preview mode</div>
+          <div class="tiny muted" style="margin-bottom:10px">Applies only when you are logged in as Admin.</div>
+          <div class="admin-actions" style="justify-content:flex-start; gap:8px; flex-wrap:wrap">
+            <button class="btn ghost small" id="pvOff">Normal</button>
+            <button class="btn ghost small" id="pvGuest">View as Guest</button>
+            <button class="btn ghost small" id="pvPaid">View as Paid</button>
+            <button class="btn ghost small" id="pvExpired">View as Expired</button>
+            <a class="btn btn-primary small" id="openDash" href="dashboard.html" style="text-decoration:none">Open Dashboard</a>
+          </div>
+          <div class="tiny muted" style="margin-top:10px">Current preview: <span class="mono" id="pvState">normal</span></div>
+        </div>
 
-      <div class="tiny muted" style="margin-top:10px;">
-        Tip: Open the dashboard in a new tab after selecting a preview mode.
+        <div class="admin-card">
+          <div class="h3" style="margin:0 0 8px 0">Feature status board</div>
+          <div class="tiny muted" style="margin-bottom:10px">This is your Phase tracker. Update statuses as we ship features.</div>
+          <div id="featureBoard" class="tiny"></div>
+        </div>
       </div>
     </section>
 

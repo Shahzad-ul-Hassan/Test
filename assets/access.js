@@ -5,6 +5,14 @@
 
 window.DL_ACCESS = { paid:false, plan:null, expiry:null, email:null };
 
+// Locked admin email (Phase‑1). Used for governance/testing.
+const DL_ADMIN_EMAIL = "decisionlens2025@gmail.com";
+
+function getAdminPreview(){
+  try{ return localStorage.getItem("DL_ADMIN_PREVIEW") || "off"; }catch(e){ return "off"; }
+}
+
+
 const $ = (id) => document.getElementById(id);
 
 function nowISO(){ return new Date().toISOString(); }
@@ -71,25 +79,17 @@ window.DL_handlePremiumClick = function(panelName){
 async function loadAccess(uid, email){
   // default unpaid
   window.DL_ACCESS = { paid:false, plan:null, expiry:null, email };
+  let d = null;
 
   try{
     const doc = await db.collection("users").doc(uid).get();
     if(doc.exists){
-      const d = doc.data() || {};
+      d = doc.data() || {};
+      const isAdminUser = (email === DL_ADMIN_EMAIL) || (d && d.role === "admin");
+      const ab = $("dlAdminBtn"); if(ab) ab.style.display = isAdminUser ? "inline-flex" : "none";
       const expired = isExpired(d.expiry);
-      let paid = !!d.active && !expired;
-      const role = d.role || null;
-
-      // Admin preview (does not change real records)
-      let preview = null;
-      try{ preview = localStorage.getItem("DL_PREVIEW_MODE"); }catch(e){}
-      if(role === "admin" && preview){
-        if(preview === "guest"){ paid = false; }
-        if(preview === "paid"){ paid = true; }
-        if(preview === "expired"){ paid = false; }
-      }
-
-      window.DL_ACCESS = { paid, plan:d.plan || null, expiry:d.expiry || null, email, role, preview };
+      const paid = !!d.active && !expired;
+      window.DL_ACCESS = { paid, plan:d.plan || null, expiry:d.expiry || null, email };
 
       if(paid){
         setStatus(`Active • ${d.plan === "yearly" ? "Yearly" : "Monthly"}${d.expiry ? " • until " + new Date(d.expiry).toLocaleDateString() : ""}`);
@@ -103,9 +103,34 @@ async function loadAccess(uid, email){
       }
     }else{
       setStatus("Free view • Not subscribed", false);
+      const ab = $("dlAdminBtn"); if(ab) ab.style.display = (email === DL_ADMIN_EMAIL) ? "inline-flex" : "none";
       const sb = $("dlSubscribeBtn");
       if(sb) sb.style.display = "inline-flex";
     }
+    // Admin preview (does not modify database)
+    try{
+      const pv = getAdminPreview();
+      const isAdmin = (email === DL_ADMIN_EMAIL) || (d && d.role === "admin");
+      if(isAdmin && pv && pv !== "off"){
+        if(pv === "guest"){
+          window.DL_ACCESS = { paid:false, plan:null, expiry:null, email };
+          setStatus("Admin preview • Guest (Free)", false);
+          const sb = $("dlSubscribeBtn");
+          if(sb) sb.style.display = "inline-flex";
+        }else if(pv === "paid"){
+          window.DL_ACCESS = { paid:true, plan:"preview", expiry:null, email };
+          setStatus("Admin preview • Paid (Unlocked)", true);
+          const sb = $("dlSubscribeBtn");
+          if(sb) sb.style.display = "none";
+        }else if(pv === "expired"){
+          window.DL_ACCESS = { paid:false, plan:null, expiry:"expired", email };
+          setStatus("Admin preview • Expired (Locked)", false);
+          const sb = $("dlSubscribeBtn");
+          if(sb) sb.style.display = "inline-flex";
+        }
+      }
+    }catch(e){}
+
 
     // Update premium header text
     const premMuted = document.querySelector(".locked-grid")?.closest(".card")?.querySelector(".tiny.muted");
@@ -145,13 +170,12 @@ function requireAuth(){
     bindLogout();
 
     if(!user){
+      const ab = $("dlAdminBtn"); if(ab) ab.style.display = "none";
       // Free (guest) access: allow Phase-1 panels.
       window.DL_ACCESS.paid = false;
       window.DL_ACCESS.plan = null;
       window.DL_ACCESS.expiry = null;
       window.DL_ACCESS.email = null;
-      window.DL_ACCESS.role = null;
-      try{ window.DL_ACCESS.preview = localStorage.getItem("DL_PREVIEW_MODE") || null; }catch(e){ window.DL_ACCESS.preview = null; }
 
       const s = $("dlStatus");
       if(s) s.textContent = "Free";
