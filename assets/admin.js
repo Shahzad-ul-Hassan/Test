@@ -1,154 +1,85 @@
-// DecisionLens Phase-2: Admin approvals
-const $ = (id) => document.getElementById(id);
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-function setMsg(text, ok=false){
-  const el = $("msg");
-  el.textContent = text;
-  el.style.color = ok ? "#7ee787" : "#ff6b6b";
-}
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
 
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-function requireAdmin(){
-  auth.onAuthStateChanged(async (user) => {
-    if(!user){
-      window.location.href = "login.html";
-      return;
-    }
-    $("who").textContent = user.email;
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
 
-    // Admin detection:
-    // 1) Hard-locked admin email (safe for Phase-1)
-    // 2) role: "admin" in /users/{uid} (future-proof)
-    let isAdmin = (user.email === ADMIN_EMAIL);
+  const usersSnapshot = await getDocs(collection(db, "users"));
 
-    try{
-      const uref = db.collection("users").doc(user.uid);
-      const usnap = await uref.get();
-      if(usnap.exists){
-        const ud = usnap.data() || {};
-        if(ud.role === "admin") isAdmin = true;
-      }else{
-        // Create a minimal user doc (best-effort) so that role can be stored.
-        await uref.set({ email: user.email || "" }, { merge:true });
+  let total = 0;
+  let active = 0;
+  let expired = 0;
+  let admins = 0;
+
+  const now = Date.now();
+
+  let tableRows = "";
+
+  usersSnapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    total++;
+
+    if (data.role === "admin") admins++;
+
+    if (data.active === true) {
+      if (data.expiry && data.expiry.toMillis && data.expiry.toMillis() < now) {
+        expired++;
+      } else {
+        active++;
       }
-
-      // Self-heal: ensure admin role is recorded for the locked admin email
-      if(user.email === ADMIN_EMAIL){
-        await uref.set({ role:"admin", active:true }, { merge:true });
-        isAdmin = true;
-      }
-    }catch(e){
-      // If rules block writes/reads, we still allow the locked admin email.
-      // No console spam for users.
     }
 
-    if(!isAdmin){
-      setMsg("Access denied: Admin only.", false);
-      setTimeout(()=>window.location.href="dashboard.html", 1200);
-      return;
-    }
-
-    bindPreviewMode();
-    renderFeatureBoard();
-    loadPending();
+    tableRows += `
+      <tr>
+        <td>${data.email || ""}</td>
+        <td>${data.role || "user"}</td>
+        <td>${data.active ? "Active" : "Inactive"}</td>
+        <td>${data.plan || "-"}</td>
+        <td>${data.expiry && data.expiry.toDate ? data.expiry.toDate().toLocaleDateString() : "-"}</td>
+      </tr>
+    `;
   });
-}
 
-
-$("btnLogout").addEventListener("click", async () => {
-  await auth.signOut();
-  window.location.href = "index.html";
-});
-
-function card(payId, p){
-  const div = document.createElement("div");
-  div.className = "admin-card";
-  div.innerHTML = `
-    <div class="admin-row">
-      <div>
-        <div class="mono">${p.email}</div>
-        <div class="tiny muted">Plan: ${p.plan} • ${p.network}</div>
-        <div class="tiny muted">Tx: <span class="mono">${p.txHash}</span></div>
-        <div class="tiny muted">Submitted: ${p.createdAt || ""}</div>
-      </div>
-      <div class="admin-actions">
-        <button class="btn btn-primary small" data-approve="${payId}">Approve</button>
-        <button class="btn ghost small" data-reject="${payId}">Reject</button>
-      </div>
+  document.getElementById("admin-content").innerHTML = `
+    <h2>System Overview</h2>
+    <div style="display:flex; gap:20px; margin-bottom:30px;">
+      <div>Total Users: <strong>${total}</strong></div>
+      <div>Active Paid: <strong>${active}</strong></div>
+      <div>Expired: <strong>${expired}</strong></div>
+      <div>Admins: <strong>${admins}</strong></div>
     </div>
+
+    <h2>User Management</h2>
+    <table border="1" cellpadding="8" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Plan</th>
+          <th>Expiry</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRows}
+      </tbody>
+    </table>
   `;
-  return div;
-}
-
-async function loadPending(){
-  $("paymentsList").innerHTML = "";
-  setMsg("Loading pending submissions…", true);
-
-  try{
-    const snap = await db.collection("payments").where("status","==","pending").get();
-    if(snap.empty){
-      setMsg("No pending payments.", true);
-      return;
-    }
-
-    setMsg("Pending payments loaded.", true);
-    snap.forEach(doc => {
-      const p = doc.data();
-      $("paymentsList").appendChild(card(doc.id, p));
-    });
-
-    document.querySelectorAll("[data-approve]").forEach(btn=>{
-      btn.addEventListener("click", async ()=> approve(btn.getAttribute("data-approve")));
-    });
-    document.querySelectorAll("[data-reject]").forEach(btn=>{
-      btn.addEventListener("click", async ()=> reject(btn.getAttribute("data-reject")));
-    });
-
-  }catch(e){
-    setMsg(e.message || "Failed to load.", false);
-  }
-}
-
-function addDays(days){
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toISOString();
-}
-
-async function approve(payId){
-  setMsg("Approving…", true);
-  const ref = db.collection("payments").doc(payId);
-  const doc = await ref.get();
-  if(!doc.exists) return setMsg("Not found.", false);
-
-  const p = doc.data();
-  const expiry = (p.plan === "yearly") ? addDays(365) : addDays(31);
-
-  try{
-    await ref.update({ status:"approved", approvedAt:new Date().toISOString() });
-    await db.collection("users").doc(p.uid).set({
-      email: p.email,
-      active: true,
-      plan: p.plan,
-      expiry
-    }, { merge:true });
-
-    setMsg("Approved. User activated.", true);
-    loadPending();
-  }catch(e){
-    setMsg(e.message || "Approve failed.", false);
-  }
-}
-
-async function reject(payId){
-  setMsg("Rejecting…", true);
-  try{
-    await db.collection("payments").doc(payId).update({ status:"rejected", rejectedAt:new Date().toISOString() });
-    setMsg("Rejected.", true);
-    loadPending();
-  }catch(e){
-    setMsg(e.message || "Reject failed.", false);
-  }
-}
-
-requireAdmin();
+});
