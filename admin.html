@@ -40,6 +40,27 @@
       <div class="tiny muted" id="msg" style="margin:10px 0"></div>
       <div id="list" class="admin-list"></div>
     </section>
+  
+    <section class="card wide" style="margin-top:16px;">
+      <div class="row-head">
+        <div>
+          <div class="h2">Preview modes</div>
+          <div class="tiny muted">Admin-only. Use these to inspect the dashboard as Guest / Paid / Expired without changing real user records.</div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+        <button class="btn" id="pvNormal">Normal view</button>
+        <button class="btn ghost" id="pvGuest">Preview as Guest (Free)</button>
+        <button class="btn ghost" id="pvPaid">Preview as Paid</button>
+        <button class="btn ghost" id="pvExpired">Preview as Expired</button>
+      </div>
+
+      <div class="tiny muted" style="margin-top:10px;">
+        Tip: Open the dashboard in a new tab after selecting a preview mode.
+      </div>
+    </section>
+
   </main>
 
   <script>

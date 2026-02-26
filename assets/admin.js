@@ -7,6 +7,31 @@ function setMsg(text, ok=false){
   el.style.color = ok ? "#7ee787" : "#ff6b6b";
 }
 
+
+function bindPreviewButtons(){
+  const setMode = (mode) => {
+    try{
+      if(!mode) localStorage.removeItem("DL_PREVIEW_MODE");
+      else localStorage.setItem("DL_PREVIEW_MODE", mode);
+    }catch(e){}
+  };
+
+  const goDash = () => window.open("dashboard.html", "_blank");
+
+  const n = $("pvNormal");
+  if(n) n.addEventListener("click", ()=>{ setMode(""); setMsg("Preview cleared. Open dashboard.", true); goDash(); });
+
+  const g = $("pvGuest");
+  if(g) g.addEventListener("click", ()=>{ setMode("guest"); setMsg("Preview: Guest (Free). Open dashboard.", true); goDash(); });
+
+  const p = $("pvPaid");
+  if(p) p.addEventListener("click", ()=>{ setMode("paid"); setMsg("Preview: Paid. Open dashboard.", true); goDash(); });
+
+  const x = $("pvExpired");
+  if(x) x.addEventListener("click", ()=>{ setMode("expired"); setMsg("Preview: Expired. Open dashboard.", true); goDash(); });
+}
+
+
 function requireAdmin(){
   auth.onAuthStateChanged(async (user) => {
     if(!user){
@@ -15,14 +40,46 @@ function requireAdmin(){
     }
     $("who").textContent = user.email;
 
-    if(user.email !== ADMIN_EMAIL){
+    let isAdmin = false;
+
+    try{
+      const uref = db.collection("users").doc(user.uid);
+      const usnap = await uref.get();
+      const udata = usnap.exists ? (usnap.data() || {}) : {};
+      // Allow admin if role is admin OR fallback to ADMIN_EMAIL
+      isAdmin = (udata.role === "admin") || (user.email === ADMIN_EMAIL);
+
+      // If this is the ADMIN_EMAIL but role is missing, self-heal (best-effort)
+      if(!usnap.exists && user.email === ADMIN_EMAIL){
+        await uref.set({
+          email: user.email,
+          role: "admin",
+          active: true,
+          plan: "yearly",
+          expiry: null,
+          createdAt: new Date().toISOString()
+        }, { merge:true });
+        isAdmin = true;
+      }else if(usnap.exists && user.email === ADMIN_EMAIL && udata.role !== "admin"){
+        await uref.set({ role:"admin" }, { merge:true });
+        isAdmin = true;
+      }
+    }catch(e){
+      // Fallback to email-only if rules block read
+      isAdmin = (user.email === ADMIN_EMAIL);
+    }
+
+    if(!isAdmin){
       setMsg("Access denied: Admin only.", false);
       setTimeout(()=>window.location.href="dashboard.html", 1200);
       return;
     }
+
+    bindPreviewButtons();
     loadPending();
   });
 }
+
 
 $("btnLogout").addEventListener("click", async () => {
   await auth.signOut();

@@ -77,8 +77,19 @@ async function loadAccess(uid, email){
     if(doc.exists){
       const d = doc.data() || {};
       const expired = isExpired(d.expiry);
-      const paid = !!d.active && !expired;
-      window.DL_ACCESS = { paid, plan:d.plan || null, expiry:d.expiry || null, email };
+      let paid = !!d.active && !expired;
+      const role = d.role || null;
+
+      // Admin preview (does not change real records)
+      let preview = null;
+      try{ preview = localStorage.getItem("DL_PREVIEW_MODE"); }catch(e){}
+      if(role === "admin" && preview){
+        if(preview === "guest"){ paid = false; }
+        if(preview === "paid"){ paid = true; }
+        if(preview === "expired"){ paid = false; }
+      }
+
+      window.DL_ACCESS = { paid, plan:d.plan || null, expiry:d.expiry || null, email, role, preview };
 
       if(paid){
         setStatus(`Active • ${d.plan === "yearly" ? "Yearly" : "Monthly"}${d.expiry ? " • until " + new Date(d.expiry).toLocaleDateString() : ""}`);
@@ -139,6 +150,8 @@ function requireAuth(){
       window.DL_ACCESS.plan = null;
       window.DL_ACCESS.expiry = null;
       window.DL_ACCESS.email = null;
+      window.DL_ACCESS.role = null;
+      try{ window.DL_ACCESS.preview = localStorage.getItem("DL_PREVIEW_MODE") || null; }catch(e){ window.DL_ACCESS.preview = null; }
 
       const s = $("dlStatus");
       if(s) s.textContent = "Free";
