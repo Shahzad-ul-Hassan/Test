@@ -1,85 +1,86 @@
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-
-const app = initializeApp(firebaseConfig);
+const app = getApp(); // existing app reuse
 const auth = getAuth(app);
 const db = getFirestore(app);
 
 onAuthStateChanged(auth, async (user) => {
+
   if (!user) {
     window.location.href = "login.html";
     return;
   }
 
-  const usersSnapshot = await getDocs(collection(db, "users"));
+  try {
 
-  let total = 0;
-  let active = 0;
-  let expired = 0;
-  let admins = 0;
+    const usersSnapshot = await getDocs(collection(db, "users"));
 
-  const now = Date.now();
+    let total = 0;
+    let active = 0;
+    let expired = 0;
+    let admins = 0;
 
-  let tableRows = "";
+    const now = Date.now();
+    let tableRows = "";
 
-  usersSnapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    total++;
+    usersSnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      total++;
 
-    if (data.role === "admin") admins++;
+      if (data.role === "admin") admins++;
 
-    if (data.active === true) {
-      if (data.expiry && data.expiry.toMillis && data.expiry.toMillis() < now) {
-        expired++;
-      } else {
-        active++;
+      if (data.active === true) {
+        if (data.expiry && data.expiry.toMillis && data.expiry.toMillis() < now) {
+          expired++;
+        } else {
+          active++;
+        }
       }
-    }
 
-    tableRows += `
-      <tr>
-        <td>${data.email || ""}</td>
-        <td>${data.role || "user"}</td>
-        <td>${data.active ? "Active" : "Inactive"}</td>
-        <td>${data.plan || "-"}</td>
-        <td>${data.expiry && data.expiry.toDate ? data.expiry.toDate().toLocaleDateString() : "-"}</td>
-      </tr>
-    `;
-  });
-
-  document.getElementById("admin-content").innerHTML = `
-    <h2>System Overview</h2>
-    <div style="display:flex; gap:20px; margin-bottom:30px;">
-      <div>Total Users: <strong>${total}</strong></div>
-      <div>Active Paid: <strong>${active}</strong></div>
-      <div>Expired: <strong>${expired}</strong></div>
-      <div>Admins: <strong>${admins}</strong></div>
-    </div>
-
-    <h2>User Management</h2>
-    <table border="1" cellpadding="8" cellspacing="0" width="100%">
-      <thead>
+      tableRows += `
         <tr>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Plan</th>
-          <th>Expiry</th>
+          <td>${data.email || ""}</td>
+          <td>${data.role || "user"}</td>
+          <td>${data.active ? "Active" : "Inactive"}</td>
+          <td>${data.plan || "-"}</td>
+          <td>${data.expiry && data.expiry.toDate ? data.expiry.toDate().toLocaleDateString() : "-"}</td>
         </tr>
-      </thead>
-      <tbody>
-        ${tableRows}
-      </tbody>
-    </table>
-  `;
+      `;
+    });
+
+    document.getElementById("admin-content").innerHTML = `
+      <h2>System Overview</h2>
+      <div style="display:flex; gap:20px; margin-bottom:30px;">
+        <div>Total Users: <strong>${total}</strong></div>
+        <div>Active Paid: <strong>${active}</strong></div>
+        <div>Expired: <strong>${expired}</strong></div>
+        <div>Admins: <strong>${admins}</strong></div>
+      </div>
+
+      <h2>User Management</h2>
+      <table border="1" cellpadding="8" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Plan</th>
+            <th>Expiry</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableRows}
+        </tbody>
+      </table>
+    `;
+
+  } catch (error) {
+    console.error("Admin load error:", error);
+    document.getElementById("admin-content").innerHTML = `
+      <p style="color:red;">Error loading users. Check console.</p>
+    `;
+  }
+
 });
